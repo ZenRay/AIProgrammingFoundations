@@ -54,3 +54,7 @@
 本项目主要包含1个文件：
 
 - `simple_data_analysis.ipynb`: 这是主文件，你将在此完成你的项目。
+
+## [P1 Robot Controller](./P1_Robot_Controller)
+
+控制寻宝机器人
