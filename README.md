@@ -124,3 +124,47 @@
 ### 说明
 
 项目内容在[此链接](https://github.com/udacity/Linear-Algebra-cn)中，你需要点击右上角的`Clone or download`将其下载下来，并尝试使用 Jupyter Notebook 运行它。
+
+## [P4 Lab Classify Dog Breed]()
+
+### 项目目标—城市狗狗秀图像分类
+
+- 提高 `Python` 编程技能
+
+  在此项目中，你将使用一个已经创建好的图像分类器识别狗品种。我们希望你能重点学习 *Python* 编程知识，而不是实际分类器（我们将在课程的后续阶段专门构建一个分类器）
+
+- 主要目标
+
+  1. 正确标识哪些宠物图像是小狗图像（即使品种分类错误），哪些宠物图像不是小狗图像。
+  2. 针对小狗图像正确判断小狗品种。
+  3. 判断哪个 CNN 模型架构（ResNet、AlexNet 或 VGG）**最能**实现目标 *1* 和 *2*。
+  4. 思考最能实现目标 *1* 和 *2* 所需的*时间*，并判断对于每个算法运行所花费的时间，是否有替代解决方案能够实现**不错**的结果。
+
+### 说明：
+
+你所在的城市即将举行一场全市狗狗秀，你志愿帮助举办方对报名的小狗进行分类。每位参赛狗主人都必须提交一张小狗图像，并附上小狗的简介信息。报名系统会根据简介信息对图像添加标签。
+
+有些人打算用**非小狗**宠物报名。
+
+你需要使用已经开发好的 **Python 分类器**检查确保参赛宠物是小狗。
+
+**注意，你不需要创建分类器，我们将提供给你。你需要运用所学的 Python 工具来使用该分类器**。
+
+### 你的任务：
+
+- 你将运用 **Python 技能**判断哪个图像分类算法**最适合**将图像分类为“小狗”或“**非**小狗”。
+
+- 判断**最佳**分类算法在正确识别狗品种方面的表现如何。
+  如果你不熟悉图像分类器一词，可以将它当做由输入和输出组成的工具。输入是图像，输出判断图像描绘的内容（例如狗）。注意，图像分类器有时候无法正确分类图像。（我们将在课程的后续阶段详细讲解这些知识）。
+
+- 计算每个算法解决分类问题花费的时间。 对于计算任务，我们经常需要在准确率和运行时间之间做出权衡。算法越准确，就越有可能运行时间更长，并消耗更多的计算资源。
+
+要了解详情，请参阅此[常见问题解答](https://github.com/udacity/AIPND-revision/blob/master/notes/project_intro-to-python.md)。
+
+### 重要事项：
+
+对于此图像分类任务，你将使用一个图像分类应用，该应用采用了称为卷积神经网络（经常简称为 CNN）的深度学习模型。CNN 尤其适合检测图像中的特征，例如颜色、纹理和边；然后利用这些特征识别出图像中的对象。你将使用已经从一个庞大的数据库（有 120 万张图像，称为 [ImageNet](http://www.image-net.org/)）中*学习*特征的 CNN。CNN 有多种不同的结构（架构）类型，对于你的应用条件，它们的效果可能很好，也可能很差。对于此项目，你将研究三个不同的架构（**AlexNet**、**VGG** 和 **ResNet**），并判断哪个最适合你。
+
+我们在 `classifier.py` 中提供了一个**分类器函数**，使你能够使用这些 CNN 分类图像。`test_classifier.py` 文件包含一个演示如何使用**分类器函数**的示例程序。对于此项目，你将重点学习使用 Python 技能通过**分类器函数**完成这些任务；在神经网络课程中，你将深入学习这些算法的工作原理。
+
+注意，某些狗品种看起来非常相似。算法从越多的两种外观相似的狗品种图像中学习规律，就越能够区分这两个品种。我们发现以下品种看起来很相似：[大白熊犬](https://www.google.com/search?q=Great+Pyrenees&source=lnms&tbm=isch&sa=X&ved=0ahUKEwje252-kpfZAhVF3FMKHeXwB3IQ_AUICigB&biw=1112&bih=1069)和[白警犬](https://www.google.com/search?tbm=isch&q=Kuvasz&spell=1&sa=X&ved=0ahUKEwi9_9fTkpfZAhWB7FMKHXlKDWoQBQg6KAA&biw=1112&bih=1069&dpr=1)、[德牧](https://www.google.com/search?biw=1112&bih=1069&tbm=isch&sa=1&ei=d7F8WpaaMc_VzgLW8LvABw&q=German+Shepherd&oq=German+Shepherd&gs_l=psy-ab.3..0i67k1j0l2j0i67k1j0l6.31751.41069.0.41515.29.18.4.7.9.0.131.1164.14j2.17.0....0...1c.1.64.psy-ab..2.26.1140.0..0i10k1j0i13k1.112.xUB8_AoVF9w)和 [玛伦牧羊犬](https://www.google.com/search?biw=1112&bih=1069&tbm=isch&sa=1&ei=orF8WtHWDcOdzwLnyLXgBw&q=Malinois&oq=Malinois&gs_l=psy-ab.3..0l3j0i67k1l3j0l2j0i67k1j0.31864.42125.0.42493.23.20.0.1.1.0.132.1460.14j4.19.0....0...1c.1.64.psy-ab..8.14.926.0...75.U5aOu6JZ9Vk)、[比格犬](https://www.google.com/search?biw=1112&bih=1069&tbm=isch&sa=1&ei=zbF8WqTiHZDxzgKlm5SYBw&q=Beagle&oq=Beagle&gs_l=psy-ab.3..0i67k1j0l2j0i67k1l2j0l5.29396.33482.0.34041.12.8.3.1.1.0.126.585.6j2.8.0....0...1c.1.64.psy-ab..0.12.609...0i10k1.0.Dr92CW2Kqqo)和[步行猎犬](https://www.google.com/search?biw=1112&bih=1069&tbm=isch&sa=1&ei=8LF8WteAGND0zgKvlL-IBw&q=Walker+hound&oq=Walker+hound&gs_l=psy-ab.3..0l10.20697.23454.0.23773.12.10.0.2.2.0.81.601.10.10.0....0...1c.1.64.psy-ab..0.12.610...0i67k1.0.GI0QxI1sadY)等等。
