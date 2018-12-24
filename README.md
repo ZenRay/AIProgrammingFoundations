@@ -270,3 +270,184 @@ python check_images.py --dir pet_images/
 ```
 
 如果你在使用命令行参数运行 **check_images.py** 时遇到问题，请参阅程序第 23 行的示例程序调用。
+
+#### 创建宠物图像标签—check_images.py 和 get_pet_labels.py
+
+填写 get_pet_labels() 函数以创建宠物图像标签：创建一个字典，键是文件名，值是文件标签。（之后我们将使用该字典检查分类器函数的准确率）
+
+##### 要修改的代码
+
+这部分将帮助你在 **get_pet_labels.py** 中编写函数 **get_pet_labels**。对于此函数，你将使用 *pet_images* 文件夹中的宠物图像的*文件名*为宠物图像创建标签。这些图像文件名表示图像中的宠物身份。宠物图像标签被视为表示图像分类“*真实结果*”的标签。你的函数将返回结果字典，其中包含宠物图像文件名和标签。
+
+- 编写函数定义 `def get_pet_labels():`，请在 *get_pet_labels.py* 中的 `#TODO: 2`所指示的位置添加代码。
+  - 根据 **get_pet_labels.py** 中的注释和文档字符串实现 **get_pet_labels**
+- 在 *check_images.py* 的 `main()` 函数中以 `#TODO: 2`开头的部分编写代码
+  - 将函数调用里的 *None* 替换为 *in_arg.dir* 以指定相应的目录。
+
+##### 预期结果
+
+编写完毕后，这段代码将返回一个字典，*键*是*宠物图像文件名*，*值*是仅包含*宠物图像标签*的*列表*，并为 *pet_image* 文件夹中的所有 40 个宠物图像都创建了键值对。
+
+##### 检查代码
+
+**check_images.py** 中的 **check_creating_pet_image_labels** 函数将检查你的代码，它会输出键值对数量和前 10 个键值对。
+
+你需要用肉眼检查确保结果符合以下要求：
+
+- 字典包含 40 个键值对（例如字典长度为 40）。
+- 宠物图像标签采用以下格式：
+  - 全小写
+  - 用一个空格区分每个单词
+  - 正确地标识了文件名（根据 10 个键值对）
+
+##### 项目 Workspace - 宠物图像标签
+
+- 完成 `#TODO: 2` 的 workspace
+- 你可以在**项目 Workspace - 宠物图像标签**中修改 **check_image.py** 和 **get_pet_labels.py**
+
+##### 其他帮助信息：
+
+###### 如何读取文件夹中的*文件名*
+
+Lab Workspace 中的文件夹 **pet_images/** 包含 40 张用于测试分类器算法的图像。**pet_images/** 中的图像文件名标识了每张图像中的动物。
+
+要为宠物图像创建_标签_，你需要：
+
+- 读取 **pet_image/** 文件夹中的所有文件的名称
+- 处理文件名以创建宠物图像标签
+- 调整宠物图像标签的格式，以便与以下内容相符
+  - 分类器函数标签
+  - dognames.txt 中的小狗名称
+
+该函数的第一个任务是从文件夹中读取文件名。要完成此任务，你只需从 [os python 模块](https://docs.python.org/3/library/os.html)中导入 [listdir 方法](https://docs.python.org/3/library/os.html#os.listdir)。**listdir** 方法会从文件夹中的文件中检索所有文件名。**listdir** 会将这些文件名当做列表返回。以下代码演示了如何进行此导入和检索操作。
+
+```python
+# Imports only listdir function from OS module 
+from os import listdir  
+
+# Retrieve the filenames from folder pet_images/
+filename_list = listdir("pet_images/")
+
+# Print 10 of the filenames from folder pet_images/
+print("\nPrints 10 filenames from folder pet_images/")
+for idx in range(0, 10, 1):
+    print("{:2d} file: {:>25}".format(idx + 1, filename_list[idx]) )
+```
+
+###### 如何创建列表字典（类似于结果字典）
+
+你应将宠物图像文件名（作为键）和包含文件名相关标签的列表（作为值）存储为 python [字典](https://docs.python.org/3/tutorial/datastructures.html#dictionaries)数据结构。选择此数据结构的理由如下：
+
+- 字典的键值对是一个逻辑选择，因为需要使用**分类器函数**处理相同的文件名（键），并将返回的标签与宠物图像标签（值）进行比较。
+- 给定输入键后，检索相关值比从其他数据结构（例如列表）中检索值的速度要快。
+
+###### 字典用途回顾
+
+你在**数据类型和运算符**一课第一次学习了字典这个概念。以下代码演示了如何使用 python 字典。
+
+- 创建空的字典
+- 创建值为*列表*的字典。
+- 判断字典中的条目数
+- 如果某个键尚未出现在字典中，向字典添加该键值对
+- 遍历字典，输出字典中的所有键值对
+
+```python
+# Creates empty dictionary named results_dic
+results_dic = dict()
+
+# Determines number of items in dictionary
+items_in_dic = len(results_dic)
+print("\nEmpty Dictionary results_dic - n items=", items_in_dic)
+
+# Adds new key-value pairs to dictionary ONLY when key doesn't already exist. This dictionary's value is
+# a List that contains only one item - the pet image label
+filenames = ["beagle_0239.jpg", "Boston_terrier_02259.jpg"]
+pet_labels = ["beagle", "boston terrier"]
+for idx in range(0, len(filenames), 1):
+    if filenames[idx] not in results_dic:
+         results_dic[filenames[idx]] = [pet_labels[idx]]
+    else:
+         print("** Warning: Key=", filenames[idx], 
+               "already exists in results_dic with value =", 
+               results_dic[filenames[idx]])
+
+#Iterating through a dictionary printing all keys & their associated values
+print("\nPrinting all key-value pairs in dictionary results_dic:")
+for key in results_dic:
+    print("Filename=", key, "   Pet Label=", results_dic[key][0])
+```
+
+（要详细了解列表字典，请参阅**项目 Workspace - 宠物图像标签**之后的**分类图像**部分）。
+
+###### 宠物图像文件格式和标签匹配
+
+对于此项目，你需要判断宠物图像标签和分类器标签是否匹配。要使用函数完成此匹配任务，你需要了解两种标签的格式。下文详述了用来创建宠物图像标签的宠物图像文件名的格式。
+
+###### 宠物图像文件
+
+宠物图像文件位于 workspace 的 *'pet_images'* 文件夹中。以下是一些文件名示例：Basenji_00963.jpg、Boston_terrier_02259.jpg、gecko_80.jpg、fox_squirrel_01.jpg
+
+详情如下：
+
+- 共 40 张宠物图像
+
+  - 30 张小狗图像
+  - 10 张非小狗动物图像
+
+- 图像的名称（标签）（
+
+  需要用于比较
+
+  ）
+
+  - 包含大小写字母
+  - 包含描述图像的一个或多个单词（标签）
+  - 单词用下划线 (_) 分隔
+
+
+
+###### 创建宠物图像标签的 Python 函数
+
+每个宠物图像名称的最佳格式为：
+
+- 标签：全部由小写字母组成
+- 对于由多个单词组成的标签，用空格分隔每个单词
+- 删除标签前后的空格
+
+你在**数据类型和运算符**一课的*字符串*和*字符串方法*部分第一次学习了字符串数据类型。根据*上述*宠物图像文件名格式，你可以使用字符串函数获得上述标签格式：
+
+- [**lower()**](https://docs.python.org/3/library/stdtypes.html#str.lower) - 使字母全变成小写形式。
+- [**split()**](https://docs.python.org/3/library/stdtypes.html#str.split) - 返回字符串中的单词列表，单词按照提供给 split 函数的分隔符分离（划分）。如果没有提供分隔符，则用空格划分。
+- [**strip()**](https://docs.python.org/3/library/stdtypes.html#str.strip) - 返回删除首尾字符的字符串。如果未传入任何字符，则删除首尾的空格。
+- [**isalpha()**](https://docs.python.org/3/library/stdtypes.html#str.isalpha) - 如果字符串仅包含字母字符，则返回 true，否则返回 false。
+
+以下代码演示了如何使用上述字符串函数。
+
+
+
+```python
+# Sets pet_image variable to a filename 
+pet_image = "Boston_terrier_02259.jpg"
+
+# Sets string to lower case letters
+low_pet_image = pet_image.lower()
+
+# Splits lower case string by _ to break into words 
+word_list_pet_image = low_pet_image.split("_")
+
+# Create pet_name starting as empty string
+pet_name = ""
+
+# Loops to check if word in pet name is only
+# alphabetic characters - if true append word
+# to pet_name separated by trailing space 
+for word in word_list_pet_image:
+    if word.isalpha():
+        pet_name += word + " "
+
+# Strip off starting/trailing whitespace characters 
+pet_name = pet_name.strip()
+
+# Prints resulting pet_name
+print("\nFilename=", pet_image, "   Label=", pet_name)
+```
