@@ -451,3 +451,227 @@ pet_name = pet_name.strip()
 # Prints resulting pet_name
 print("\nFilename=", pet_image, "   Label=", pet_name)
 ```
+
+#### 分类图像— check_images.py 和 classify_images.py
+
+实现 classify_images() 函数，以在分类器函数中使用 in_arg.arch 创建分类器标签。比较标签并创建结果字典 (result_dic)。
+
+##### 要修改的代码
+
+此方法将帮助你在 **classify_images.py** 中编写函数 **classify_images**。对于此函数，你将使用分类器函数为图像创建标签。此外，你会将这些分类器的标签与宠物图像标签进行比较。最后，你将使用 **classify_images**返回的复杂数据结构存储宠物图像标签、分类器生成的标签和标签比较结果。最后，你会将分类器生成的标签和标签比较结果存储在结果字典（复杂的数据结构，由 **get_pet_labels** 函数返回）里。
+
+- 在 *classify_images.py* 中的函数 `def classify_images()` 中带有 `#TODO: 3` 标记的位置编写代码
+  - 根据 **classify_images.py** 中的注释和文档字符串定义 **classify_images**
+- 在 *check_images.py* 中的 `main()` 函数中带有 `#TODO: 3` 标记的位置编写代码
+  - 在对 **classify_images** 的函数调用中，将第一个 *None* 替换为 *in_arg.dir*，并将最后一个 *None* 替换为 *in_arg.arch*
+
+##### 预期结果
+
+编写完毕后，这段代码将返回一个列表字典，*键*是*宠物图像文件名*，*值*是 *pet_image* 文件夹中所有 40 张宠物图像的列表。该列表将包含以下条目：
+
+- 宠物图像标签（索引 0）
+- 分类器标签（索引 1）
+- 标签比较结果（索引 2）
+
+##### 检查代码
+
+**check_images.py** 中的 **check_classifying_images** 函数将检查你的代码。此函数将输出分类器标签和宠物图像标签匹配的所有情形，以及标签不匹配的所有情形。
+
+肉眼检查结果后表明：
+
+- 分类器和宠物图像标签匹配的情形*的确*匹配
+- 分类器和宠物图像标签不匹配的情形*的确*不匹配
+- *匹配数*和*不匹配数*加起来为 **40**，正好等于 *pet_images* 文件夹中的图像总数 40
+
+##### 项目 Workspace - 分类图像
+
+- 完成 `#TODO: 3` 的 workspace
+- 你可以在**项目 Workspace - 分类图像**中修改 **check_image.py** 和 **classify_Images.py**
+
+
+
+##### 获取其他帮助信息
+
+###### 如何使用分类器函数
+
+***测试*分类器函数**
+
+测试我们将用来分类宠物图像的环境和**分类器函数**。此函数位于 *classifier.py* 程序中。通过按以下说明运行 *test_classifier.py* 程序，测试你的环境。你可以查看 *test_classifier.py* 程序，了解如何在 **classify_images.py**中使用**分类器函数**。
+
+1. 转到 **Lab Workspace - 分类图像**页面。
+
+2. 打开终端。
+
+3. 在命令行中输入以下命令以测试 classifier.py 程序。**柯利犬** 图像应该正确地分类为 柯利犬
+
+   ```
+   python test_classifier.py 
+   ```
+
+###### 关于 *test_classifier.py* 的详情
+
+查看 **test_classifier.py** 程序后，你将发现以下信息：
+
+- 分类器函数必须导入你的程序中（*已经在 \**check_images.py*** 中导入了）。
+
+- 分类器函数有两个参数：
+
+  - 完整的图像路径
+
+    （包括文件夹和文件名）。
+
+    - 文件夹和文件名存储为单独的变量，可以[连接](http://www.thefreedictionary.com/concatenated)成一个字符串。
+
+  - CNN 模型 架构
+
+    - 必须为 *resnet*、*vgg* 或 *alexnet*
+
+要查看 `test_classifier.py` 的代码，请在“项目 Workspace - 分类图像”中打开该程序。
+
+###### 分类器标签格式和标签匹配
+
+你的函数需要能够判断宠物图像标签和分类器函数返回的标签是否匹配。为了使用函数完成此匹配任务，你需要了解分类器标签的格式。下面详述了分类器标签的格式。
+
+###### 分类器标签
+
+标签位于文件 *imagenet1000_clsid_to_human.txt* 中，你将在项目 workspace 中看到该文件。
+
+标签信息：
+
+- 共 1000 个标签
+  - 与 118 个不同的小狗品种相关联
+    - 小狗品种与 ID 相关，151：吉娃娃，到 268：墨西哥无毛狗
+  - 与不是小狗的 882 张图像相关
+- 标签格式：
+  - 包含大小写字母
+  - 用一个单词标识图像
+    - 例如 *beagle*
+  - 用多个单词（用空格分隔）标识图像
+    - 例如 *German shorthaired pointer*
+  - 用几个不同的术语（用英文逗号分隔）标识相同的图像
+    - 例如 *cocker spaniel, English cocker spaniel, cocker*
+
+###### 比较宠物图像标签和分类器标签
+
+在**创建宠物图像标签**页面，我们将宠物图像标签的格式设为：
+
+- 标签全小写
+- 对于由多个单词组成的标签，用空格区分每个单词
+- 去除标签首尾的空格
+- 示例：
+  - beagle
+  - cocker spaniel
+  - polar bear
+
+查看上述分类器标签格式后，你唯一需要处理的是将所有字母变成小写形式，并去除首尾的所有空格。你可以使用 [**in** 运算符](https://docs.python.org/3/library/stdtypes.html#common-sequence-operations)判断宠物图像标签是否与组成分类器标签的某个术语匹配。宠物图像标签始终只有一个术语（即使该术语由多个单词构成）。因此，如果你发现（使用 [**in** 运算符](https://docs.python.org/3/library/stdtypes.html#common-sequence-operations)）宠物图像标签与组成分类器标签的某个术语匹配，那么属于匹配情况。
+
+你在（Python 课程的）**数据类型和运算符**一课第一次学习了字符串数据类型。要完成这些格式设定和匹配任务，请使用以下字符串函数：
+
+- [**lower()**](https://docs.python.org/3/library/stdtypes.html#str.lower) - 使字母全变成小写形式。
+- [**strip()**](https://docs.python.org/3/library/stdtypes.html#str.strip) - 返回删除首尾字符的字符串。如果未传入任何字符，则删除首尾的空格。
+- [**in** 运算](https://docs.python.org/3/library/stdtypes.html#common-sequence-operations) - 如果某个字符串存在于另一个字符串里，则返回 *True*，否则返回 *False*。
+
+###### 结果的数据结构—复合数据结构
+
+你在**数据类型和运算符**一课第一次学习了字典这个概念。**get_pet_labels** 函数返回一个字典，*键*为文件名，*值*为仅包含宠物图像标签的列表。对于 **classify_images** 函数，你可以使用 [**extend**](https://docs.python.org/3.1/tutorial/datastructures.html) 列表函数将分类器标签和比较结果同时添加到结果字典里。
+
+你在**数据类型和运算符**一课第一次学习了复合数据结构。你创建并使用嵌套字典来存储元素信息。对于此项目，我们建议使用的复合数据结构是列表（*值*）字典。如果你选择使用其他复合数据结构，以下检查函数将不可用：
+
+- **check_creating_pet_image_labels**
+- **check_classifying_images**
+- **check_classifying_labels_as_dogs**
+- **check_calculating_results**
+
+选择该数据结构的原因是：
+
+- 使用索引值更容易访问列表元素
+- 你可以使用 [sum()](https://docs.python.org/3/library/functions.html#sum) 函数和 [slicing](https://docs.python.org/3/tutorial/introduction.html#lists) 快速分类结果
+
+###### 计算结果
+
+对于此函数，你需要输入 *results_dic* 字典，其中：
+
+- *键*为*文件名*
+- 值为仅包含*宠物图像标签*的*列表*。
+
+你将需要：
+
+1) 遍历该字典 (*results_dic*)，使用**分类器函数**处理每个宠物图像（文件名），以获取分类器标签。
+
+2) 比较宠物图像和分类器标签，判断它们是否匹配。
+
+3) 将结果添加到结果字典 (*results_dic*) 中。
+
+（在**可变数据类型和函数**部分，你发现：因为结果字典是可变数据类型，因此不需要从 **classify_images** 函数返回该字典）。
+
+防止 **classify_images** 出现问题的编程建议：
+
+- 对于**分类器函数**，确保将 *images_dir* 与*文件名*相连，表示每个宠物图像文件的*完整*路径。
+- 使分类器标签全小写，去除标签首尾的空格。
+- *results_dic* 格式将如下：
+  - *键* = 宠物图像文件名（例如 Beagle_01141.jpg）
+  - 值 = 满足以下条件的列表：
+    - 索引 0 = 宠物图像标签（例如 beagle）
+    - 索引 1 = 分类器标签（例如 english foxhound）
+    - 索引 2 = 0/1，其中 1 = 标签匹配，0 = 标签不匹配（例如 0）
+  - example_dictionary = {'Beagle_01141.jpg': ['beagle', 'english foxhound', 0]}
+- 要*初始化* *results_dic* 中的键，使用*赋值*运算符 (=) 分配列表的值。
+- 要向 *results_dic* 中的**现有键**列表添加一项，请使用 *+=* 运算符或 *append* 函数向该列表附加值。
+- 要同时向 *results_dic* 中的**现有键**列表添加多项，请使用 [**extend**](https://docs.python.org/3.1/tutorial/datastructures.html) 列表函数。
+
+要详细了解如何使用列表字典，请参阅以下示例代码。该代码演示了*初始化*键值对和向*现有*键值对列表添加项目的区别。该代码还演示了如何遍历列表字典，以访问列表中的每个元素。
+
+
+
+```python
+# Defining lists to populate dictionary 
+filenames = ["Beagle_01141.jpg", "Beagle_01125.jpg", "skunk_029.jpg" ]
+pet_labels = ["beagle", "beagle", "skunk"]
+classifier_labels = ["walker hound, walker foxhound", "beagle",
+                     "skunk, polecat, wood pussy"]
+pet_label_is_dog = [1, 1, 0]
+classifier_label_is_dog = [1, 1, 0]
+
+# Defining empty dictionary
+results_dic = dict()
+
+# Populates empty dictionary with both labels &indicates if they match (idx 2)
+for idx in range (0, len(filenames), 1):
+    # If first time key is assigned initialize the list with pet & 
+    # classifier labels
+    if filenames[idx] not in results_dic:
+        results_dic[filenames[idx]] = [ pet_labels[idx], classifier_labels[idx] ]
+
+    # Determine if pet_labels matches classifier_labels using in operator
+    # - so if pet label is 'in' classifier label it's a match
+    # ALSO since Key already exists because labels were added, append 
+    # value to end of list for idx 2 
+    # if pet image label was FOUND then there is a match 
+    if pet_labels[idx] in classifier_labels[idx]:
+        results_dic[filenames[idx]].append(1)
+
+    # if pet image label was NOT found then there is no match
+    else:
+        results_dic[filenames[idx]].append(0)
+
+# Populates dictionary with whether or not labels indicate a dog image (idx 3&4)
+for idx in range (0, len(filenames), 1):
+    # Key already exists, extend values to end of list for idx 3 & 4
+    results_dic[filenames[idx]].extend(pet_label_is_dog[idx], 
+                                       classifier_label_is_dog[idx])
+
+# Iterates through the list to print the results for each filename
+for key in results_dic:
+    print("\nFilename=", key, "\npet_image Label=", results_dic[key][0],
+          "\nClassifier Label=", results_dic[key][1], "\nmatch=",
+          results_dic[key][2], "\nImage is dog=", results_dic[key][3],
+          "\nClassifier is dog=", results_dic[key][4])                        
+
+    # Provides classifications of the results
+    if sum(results_dic[key][2:]) == 3:
+        print("*Breed Match*")
+    if sum(results_dic[key][3:]) == 2:
+        print("*Is-a-Dog Match*")
+    if sum(results_dic[key][3:]) == 0 and results_dic[key][2] == 1:
+        print("*NOT-a-Dog Match*")
+```
