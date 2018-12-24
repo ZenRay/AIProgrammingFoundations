@@ -1055,3 +1055,15 @@ sh run_models_batch.sh
 如果你想在 Windows 计算机上*批处理*程序，则需要遵守[此处](https://github.com/udacity/AIPND/blob/master/notes/lab_intro-to-python-lab.md#running-batch-files-on-windows-os-locally)提供的说明。
 
 使用 `run_models_batch.sh`（在 Windows 上使用 `run_models_batch.bat`）运行所有三个模型后，将这些结果与**最终结果**部分的结果进行比较。
+
+## [P4 Image Classifier](./P4_ImageClassifier)
+
+### 通过深度学习开发图像分类器
+
+在项目的第一部分，你将利用 Jupyter notebook 通过 PyTorch 实现一个图像分类器。我们将提供一些提示和建议，但是你需要完成大部分代码。在处理该项目的过程中，请[参阅此审阅标准](https://review.udacity.com/#!/rubrics/2453/view)，获取如何成功地提交项目的指导说明。
+
+请注意，你应该自己编写代码，请勿剽窃（更多详情[请参阅此处](https://udacity.zendesk.com/hc/en-us/articles/360001451091-What-is-plagiarism-)）。
+
+在提交项目时需要包含此 notebook。完成后，确保将其下载为 HTML 文件并在项目的下个部分编写的文件中包含此文件。
+
+我们为你提供了处理此项目所需的 GPU Workspace。如果你想在本地机器上处理项目，可以在[此 GitHub](https://github.com/udacity/paind-project) [暂时处于非公开状态]上找到这些文件。
