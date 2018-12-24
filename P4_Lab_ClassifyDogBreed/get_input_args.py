@@ -43,10 +43,17 @@ def get_input_args():
     # init the parser
     parser = argparse.ArgumentParser()
     
-    parser.add_argument("dir", help="Image Folder default value 'pet_images")
-    parser.add_argument("arch", help="CNN model architecture default value 'vgg'")
     parser.add_argument(
-        "dogfile", help="Text file with dog names defualt value dognames.txt"
+        "--dir", type=str, default="pet_images/", 
+        help="Image Folder default value 'pet_images"
+    )
+    parser.add_argument(
+        "--arch", type=str, default="vgg/",
+        help="CNN model architecture default value 'vgg'"
+    )
+    parser.add_argument(
+        "--dogfile", type=str, default="dognames.txt",
+        help="Text file with dog names defualt value dognames.txt"
     )
     # get the arguments
     args = parser.parse_args()
