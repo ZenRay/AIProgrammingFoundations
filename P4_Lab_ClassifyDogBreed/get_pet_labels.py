@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 # */AIPND-revision/intropyproject-classify-pet-images/get_pet_labels.py
 #                                                                             
-# PROGRAMMER: 
+# PROGRAMMER: RayZen
 # DATE CREATED:                                  
-# REVISED DATE: 
+# REVISED DATE: 24/12/18
 # PURPOSE: Create the function get_pet_labels that creates the pet labels from 
 #          the image's filename. This function inputs: 
 #           - The Image Folder as image_dir within get_pet_labels function and 
@@ -18,6 +18,7 @@
 ##
 # Imports python modules
 from os import listdir
+import re
 
 # TODO 2: Define get_pet_labels function below please be certain to replace None
 #       in the return statement with results_dic dictionary that you create 
@@ -33,13 +34,30 @@ def get_pet_labels(image_dir):
     and with leading and trailing whitespace characters stripped from them.
     (ex. filename = 'Boston_terrier_02259.jpg' Pet label = 'boston terrier')
     Parameters:
-     image_dir - The (full) path to the folder of images that are to be
-                 classified by the classifier function (string)
+        image_dir - The (full) path to the folder of images that are to be
+                    classified by the classifier function (string)
     Returns:
-      results_dic - Dictionary with 'key' as image filename and 'value' as a 
-      List. The list contains for following item:
-         index 0 = pet image label (string)
+        results_dic - Dictionary with 'key' as image filename and 'value' as a 
+        List. The list contains for following item:
+            index 0 = pet image label (string)
     """
     # Replace None with the results_dic dictionary that you created with this
     # function
-    return None
+    results_dic = dict()
+        
+    # create the regex pattern
+    pattern = re.compile(r"([A-Za-z_]*)(?:_\d*.jpg$)")
+    for file in listdir(image_dir):
+        if file not in results_dic:
+            results_dic[file] = [i.lower().replace("_", " ") 
+                                    for i in pattern.findall(file)]
+        else:
+            print("Warning: key=", file, "already exists in results_dic =", 
+                    results_dic[file])
+
+    return results_dic
+
+# add the test unit
+if __name__ == "__main__":
+    path = input("Enter the path:")
+    print(get_pet_labels(path))

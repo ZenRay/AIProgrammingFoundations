@@ -48,7 +48,7 @@ def get_input_args():
         help="Image Folder default value 'pet_images"
     )
     parser.add_argument(
-        "-a", "--arch", type=str, default="vgg/", 
+        "-a", "--arch", type=str, default="vgg", 
         help="CNN model architecture default value 'vgg'"
     )
     parser.add_argument(
