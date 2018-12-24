@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 # */AIPND-revision/intropyproject-classify-pet-images/adjust_results4_isadog.py
 #                                                                             
-# PROGRAMMER: 
+# PROGRAMMER: RayZen
 # DATE CREATED:                                 
-# REVISED DATE: 
+# REVISED DATE: 24/12/18
 # PURPOSE: Create a function adjust_results4_isadog that adjusts the results 
 #          dictionary to indicate whether or not the pet image label is of-a-dog, 
 #          and to indicate whether or not the classifier image label is of-a-dog.
@@ -67,4 +67,38 @@ def adjust_results4_isadog(results_dic, dogfile):
     Returns:
            None - results_dic is mutable data type so no return needed.
     """           
-    None
+    dogname_dict = dict()
+
+    # get file info
+    with open(dogfile, "r") as file:
+        for line in file.readlines():
+            line = line.strip()
+
+            # adds dogname(line) to dogsnames_dic if it doesn't already exist 
+            # in the dogsnames_dic dictionary
+            for dog in line.split(","):
+                dogname_dict[dog] = 1
+
+    # Add to whether pet labels & classifier labels are dogs by appending
+    # two items to end of value(List) in results_dic. 
+    # List Index 3 = whether(1) or not(0) Pet Image Label is a dog AND 
+    # List Index 4 = whether(1) or not(0) Classifier Label is a dog
+    # How - iterate through results_dic if labels are found in dognames_dic
+    # then label "is a dog" index3/4=1 otherwise index3/4=0 "not a dog"
+    for key in results_dic:
+
+        # Pet Image Label IS of Dog (e.g. found in dognames_dic)
+        if results_dic[key][0] in dogname_dict:
+            
+            # Classifier Label IS image of Dog (e.g. found in dognames_dic)
+            # appends (1, 1) because both labels are dogs
+            if results_dic[key][1] in dogname_dict:
+                results_dic[key].extend((1, 1))
+            else:
+                results_dic[key].extend([1, 0])
+        # Pet Image Label IS NOT a Dog image (e.g. NOT found in dognames_dic)
+        else:
+            if results_dic[key][1] in dogname_dict:
+                results_dic[key].extend([0, 1])
+            else:
+                results_dic[key].extend([0, 0])
