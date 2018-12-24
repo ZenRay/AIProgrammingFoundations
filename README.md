@@ -168,3 +168,105 @@
 我们在 `classifier.py` 中提供了一个**分类器函数**，使你能够使用这些 CNN 分类图像。`test_classifier.py` 文件包含一个演示如何使用**分类器函数**的示例程序。对于此项目，你将重点学习使用 Python 技能通过**分类器函数**完成这些任务；在神经网络课程中，你将深入学习这些算法的工作原理。
 
 注意，某些狗品种看起来非常相似。算法从越多的两种外观相似的狗品种图像中学习规律，就越能够区分这两个品种。我们发现以下品种看起来很相似：[大白熊犬](https://www.google.com/search?q=Great+Pyrenees&source=lnms&tbm=isch&sa=X&ved=0ahUKEwje252-kpfZAhVF3FMKHeXwB3IQ_AUICigB&biw=1112&bih=1069)和[白警犬](https://www.google.com/search?tbm=isch&q=Kuvasz&spell=1&sa=X&ved=0ahUKEwi9_9fTkpfZAhWB7FMKHXlKDWoQBQg6KAA&biw=1112&bih=1069&dpr=1)、[德牧](https://www.google.com/search?biw=1112&bih=1069&tbm=isch&sa=1&ei=d7F8WpaaMc_VzgLW8LvABw&q=German+Shepherd&oq=German+Shepherd&gs_l=psy-ab.3..0i67k1j0l2j0i67k1j0l6.31751.41069.0.41515.29.18.4.7.9.0.131.1164.14j2.17.0....0...1c.1.64.psy-ab..2.26.1140.0..0i10k1j0i13k1.112.xUB8_AoVF9w)和 [玛伦牧羊犬](https://www.google.com/search?biw=1112&bih=1069&tbm=isch&sa=1&ei=orF8WtHWDcOdzwLnyLXgBw&q=Malinois&oq=Malinois&gs_l=psy-ab.3..0l3j0i67k1l3j0l2j0i67k1j0.31864.42125.0.42493.23.20.0.1.1.0.132.1460.14j4.19.0....0...1c.1.64.psy-ab..8.14.926.0...75.U5aOu6JZ9Vk)、[比格犬](https://www.google.com/search?biw=1112&bih=1069&tbm=isch&sa=1&ei=zbF8WqTiHZDxzgKlm5SYBw&q=Beagle&oq=Beagle&gs_l=psy-ab.3..0i67k1j0l2j0i67k1l2j0l5.29396.33482.0.34041.12.8.3.1.1.0.126.585.6j2.8.0....0...1c.1.64.psy-ab..0.12.609...0i10k1.0.Dr92CW2Kqqo)和[步行猎犬](https://www.google.com/search?biw=1112&bih=1069&tbm=isch&sa=1&ei=8LF8WteAGND0zgKvlL-IBw&q=Walker+hound&oq=Walker+hound&gs_l=psy-ab.3..0l10.20697.23454.0.23773.12.10.0.2.2.0.81.601.10.10.0....0...1c.1.64.psy-ab..0.12.610...0i67k1.0.GI0QxI1sadY)等等。
+
+#### 命令行参数— get_input_args() 函数
+
+**要修改的代码：**
+
+​	此部分将帮助你编写 **get_input_args.py** 中的函数 **get_input_args**。对于此函数，你将使用 argparse 从用户那获取三个命令行参数。（借助 argparse，你可以轻松地编写用户友好型命令行界面）。
+
+* 编写函数定义 `def get_input_args():`，请在 **get_input_args.py** 中的 `#TODO: 1` 所指示的位置添加代码。
+
+**预期结果**
+
+​	编写完毕后，这段代码将输入用户提供的三个命令行参数。
+
+**检查代码**
+
+​	**check_images.py** 中的 **check_command_line_arguments** 函数将检查你的代码。
+
+测试以下内容：
+
+- 在终端窗口里运行 **check_image.py** 时**不**输入任何命令行参数，这样应该会导致输出*默认*值。
+- 在终端窗口里运行 **check_image.py** 时输入你所选的命令行参数值，这样应该会导致输出你所输入的值。
+
+**项目 Workspace - 命令行参数**
+
+- 完成 `#TODO: 1` 
+- 你可以在**项目 Workspace - 命令行参数**中修改 **check_image.py** 和 **get_input_args.py**。
+
+#### 命令行参数—目的
+
+命令行参数的目的是使程序能够获得外部输入（命令行参数），从而提高程序的灵活性。关键在于这些外部参数可以改变，从而使程序具有更高的灵活性。
+
+例如，假设你编写了一个程序，该程序会数一数文件的行数并将该数字输出到屏幕上。要使用户能够进入_任何*文件，而不用更改程序，我们需要以命令行参数的形式传入文件位置。这样的话，该程序可以用在*任何_文件上，因为值在运行时作为外部输入被传入。
+
+##### Argparse 的用法：
+
+我们将使用 **argparse** 模块将以下外部输入输入到程序 **check_image.py** 中。我们建议编写 **get_input_args**函数以使用 **argparse** 获取命令行参数。
+
+以下是 **check_image.py** 程序从用户那获取输入所需的三个外部输入以及每个输入的建议_默认_值。
+
+- 包含宠物图像的文件夹
+  - *pet_images/*
+
+- 要使用的 CNN 模型架构
+  - *resnet*、*alexnet* 或 *vgg*（选一个作为默认值）。你将在 **classifier.py** 中找到这些模型。
+
+- 包含有效小狗名称列表的文件
+  - *dognames.txt*
+
+**get_input_args** 函数需要使用 [argparse.ArgumentParser](https://docs.python.org/3/library/argparse.html#argparse.ArgumentParser) 创建一个参数解析器对象，然后使用 [add_argument 方法](https://docs.python.org/3/library/argparse.html#adding-arguments)以使用户能够输入上述三个外部输入。
+
+以下示例演示了如何创建参数解析器对象，然后使用 **add_argument** 添加文件夹路径参数和第二个整数参数。
+
+```python
+# Creates Argument Parser object named parser
+parser = argparse.ArgumentParser()
+
+# Argument 1: that's a path to a folder
+parser.add_argument('--dir', type = str, default = 'pet_images/', 
+                    help = 'path to the folder of pet images') 
+```
+
+以下是对 **add_argument** 输入的解释。
+
+- **参数 1**：
+  - --dir = 参数的变量名（本例中是 *dir*）
+  - type = 参数类型（本例中是字符串）
+  - default = 默认值（本例中是 'pet_images/'）
+  - help = 用户输入程序名，然后输入 -h 或 --help 时出现的文本。使用户了解期望的参数值是什么。
+
+##### 访问 Argparse 参数
+
+要通过 argparse 对象访问传入程序中的参数，你需要使用 [**parse_args 方法**](https://docs.python.org/3/library/argparse.html#the-parse-args-method)。以下代码演示了如何通过扩展上述示例的 argparse 访问参数。
+
+首先，你需要为 **parse_args** 分配一个变量，然后使用该变量访问 argparse 对象的参数。如果在函数内创建 argparse 对象，需要_返回_ **parse_args**，而不是为它分配一个变量。同时注意，变量 **in_args** 指向命令行参数集合。
+
+这意味着要访问我们在上方代码里创建的参数，我们需要引用集合变量名 **in_args**，然后指定命令行参数变量名 `dir`。对于此示例，名称是 **in_args.dir**，其中 *in_args* 是集合变量名，*dir* 是命令行参数变量名。注意，你需要用点 (.) 区分这两个变量名。以下代码演示了如何将 **in_args** 分配给我们的解析器，然后使用输出语句访问 **in_args.dir** 的值。
+
+```python
+# Assigns variable in_args to parse_args()
+in_args = parser.parse_args()
+
+# Accesses values of Argument 1 by printing it
+print("Argument 1:", in_args.dir)
+```
+
+
+
+##### 使用命令行参数运行程序
+
+要运行 **check_images.py** 这样的程序，首先在项目 Workspace 中打开终端窗口。然后输入以下命令并按下 Enter 键以运行程序（在此示例中为 check_images.py）。因为在程序名称（在此示例中为 check_images.py）后面没有指定命令行参数，因此将使用定义的默认命令行参数。
+
+```terminal
+python check_images.py 
+```
+
+要使用命令行参数 `--dir` 运行 **check_images.py** 这样的程序，首先在项目 Workspace 中打开终端窗口。然后输入以下命令并按下 Enter 键以运行程序（在此示例中为 check_images.py）。注意，所有命令行参数都在程序名称（在此示例中为 check_images.py）后面指定，并且它们的变量名（在此示例中为 *dir*）前面有个 **--**，然后在变量名后面是值（在此示例中为字符串 *pet_images/*）。
+
+```terminal
+python check_images.py --dir pet_images/
+```
+
+如果你在使用命令行参数运行 **check_images.py** 时遇到问题，请参阅程序第 23 行的示例程序调用。
