@@ -143,6 +143,38 @@ class TrainModel:
         self.model.classifier = classifier
         return self.model
 
+    def __test_report(self, loader):
+        """Display the test report
+        """
+        with warnings.catch_warnings(), torch.no_grad():
+            warnings.simplefilter("ignore")
+            
+            # change the model stage
+            self.model.eval()
+
+            test_loss = 0
+            accuracy = 0
+
+            for images, labels in iter(loader):
+                if torch.cuda.is_available():
+                    inputs = Variable(images.float().cuda(), volatile=True)
+                    inputs = Variable(labels.float().cuda(), volatile=True)
+                else:
+                    inputs = Variable(images, volatile=True)
+                    inputs = Variable(labels, volatile=True)
+
+                output = self.model.forward(inputs)
+                test_loss += self.criterion(output, labels).data[0]
+
+                # calculate the probability
+                ps = torch.exp(output).data
+                # class with highest probability, compared with true label
+                equality = (labels.data == ps.max(1)[1])
+
+                # accuracy is correct predictions ratio
+                accuracy += equality.type_as(torch.FloatTensor()).mean()
+
+            return test_loss/len(loader), accuracy/len(loader) * 100
     def train_model(
         self, input_size, out_size, rotation, reseize, hidden_layers=None
     ):
@@ -209,8 +241,8 @@ class TrainModel:
         )
 
         # define criterion and optimizer
-        criterion = nn.NLLLoss()
-        optimizer = optim.Adam(self.model.classifier.parameters(), lr=0.001)
+        self.criterion = nn.NLLLoss()
+        self.optimizer = optim.Adam(self.model.classifier.parameters(), lr=0.001)
 
         # push the model into gpu
         self.model.cuda()
