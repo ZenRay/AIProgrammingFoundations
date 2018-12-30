@@ -77,13 +77,24 @@ class TrainModel:
         file: json file
             Text file with spacies name
         """
+        # set the default models
+        pretrain_model = {
+            "vgg19_bn": models.vgg19_bn(pretrained=True), 
+            "vgg19": models.vgg19(pretrained=True),
+            "resnet50": models.resnet50(pretrained=True)
+        }
+
         self.dir = dir
         self.train = os.path.join(dir, "train")
         self.test = os.path.join(dir, "test")
         self. validate = os.path.join(dir, "valid")
         
         self.file = file
-        self.arch = arch
+        try:
+            self.model = pretrain_model[arch]
+        except KeyError:
+            arch = input("Invalidate model, choose vgg19_nb, vgg19, resnet50: ")
+            self.model = pretrain_model[arch]
 
     def get_spacies(self, file=None):
         """Parse the flowers spacies
