@@ -175,36 +175,18 @@ class TrainModel:
                 accuracy += equality.type_as(torch.FloatTensor()).mean()
 
             return test_loss/len(loader), accuracy/len(loader) * 100
-    def train_model(
-        self, input_size, out_size, rotation, reseize, hidden_layers=None
-    ):
-        """Build the classifier
 
-        Enter your Nerual Network layers information
-        
-        Parameters:
-        -----------
-        input_size: int
-            Nerual Network input size
-        out_size: int
-            Nerual Network output size
-        hidden_laysers: list default None
-            Nerual Network hidden layers
-        rotation: int
-            Transforms Random Rotations degree
-        resize: int
-            The final image size
+    def __loader(self, rotation, resize):
         """
-
-        self.__classifier(input_size, out_size, hidden_layers)
-
+        Get the dataset loader
+        """
         # define the transforms
         train_transforms = transforms.Compose([
             transforms.RandomRotation(rotation),
             transforms.RandomResizedCrop(256),
             transforms.RandomHorizontalFlip(),
             transforms.RandomVerticalFlip(0.2),
-            transforms.RandomResizedCrop(reseize),
+            transforms.RandomResizedCrop(resize),
             transforms.ToTensor(),
             transforms.Normalize([0.485, 0.456, 0.406], 
                                 [0.229, 0.224, 0.225])
@@ -213,7 +195,7 @@ class TrainModel:
 
         test_transforms = transforms.Compose([
             transforms.Resize(256),
-            transforms.CenterCrop(reseize),
+            transforms.CenterCrop(resize),
             transforms.ToTensor(),
             transforms.Normalize([0.485, 0.456, 0.406], 
                                 [0.229, 0.224, 0.225])
@@ -239,7 +221,34 @@ class TrainModel:
         self.test_loader = torch.utils.data.DataLoader(
             test_dataset, batch_size=32
         )
+        return self.train_loader, self.valid_loader, self.test_loader
 
+    def train_model(
+        self, input_size, out_size, rotation, resize, hidden_layers=None
+    ):
+        """Build the classifier
+
+        Enter your Nerual Network layers information
+        
+        Parameters:
+        -----------
+        input_size: int
+            Nerual Network input size
+        out_size: int
+            Nerual Network output size
+        hidden_laysers: list default None
+            Nerual Network hidden layers
+        rotation: int
+            Transforms Random Rotations degree
+        resize: int
+            The final image size
+        """
+
+        self.__classifier(input_size, out_size, hidden_layers)
+
+        # get the dataset loader
+        self.__loader(rotation, resize)
+        
         # define criterion and optimizer
         self.criterion = nn.NLLLoss()
         self.optimizer = optim.Adam(self.model.classifier.parameters(), lr=0.001)
