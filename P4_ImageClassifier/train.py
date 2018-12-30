@@ -109,3 +109,110 @@ class TrainModel:
             self.spacies = json.load(data)
         
         return self.spacies
+
+    def __classifier(self, input_size, out_size, hidden_layers=None):
+        """Build the classifier
+
+        Enter your Nerual Network layers information
+        
+        Parameters:
+        -----------
+        input_size: int
+            Nerual Network input size
+        out_size: int
+            Nerual Network output size
+        hidden_laysers: list default None
+            Nerual Network hidden layers
+        """
+        if not isinstance(hidden_layers, list):
+            hidden_layers = [1000, 300]
+        elif len(hidden_layers) > 2:
+            hidden_layers = [1000, 300]
+        
+        classifier = nn.Sequential(OrderedDict([
+            ("fc1", nn.Linear(input_size, hidden_layers[0])),
+            ("relu1", nn.ReLU()),
+            ("fc2", nn.Linear(hidden_layers[0], hidden_layers[1])),
+            ("relu2", nn.ReLU()),
+            ("dropout", nn.Dropout(p=.5)),
+            ("fc3", nn.Linear(hidden_layers[1], out_size)),
+            ("output", nn.LogSoftmax(dim=1))
+        ]))
+
+        # adjust the classifier
+        self.model.classifier = classifier
+        return self.model
+
+    def train_model(
+        self, input_size, out_size, rotation, reseize, hidden_layers=None
+    ):
+        """Build the classifier
+
+        Enter your Nerual Network layers information
+        
+        Parameters:
+        -----------
+        input_size: int
+            Nerual Network input size
+        out_size: int
+            Nerual Network output size
+        hidden_laysers: list default None
+            Nerual Network hidden layers
+        rotation: int
+            Transforms Random Rotations degree
+        resize: int
+            The final image size
+        """
+
+        self.__classifier(input_size, out_size, hidden_layers)
+
+        # define the transforms
+        train_transforms = transforms.Compose([
+            transforms.RandomRotation(rotation),
+            transforms.RandomResizedCrop(256),
+            transforms.RandomHorizontalFlip(),
+            transforms.RandomVerticalFlip(0.2),
+            transforms.RandomResizedCrop(reseize),
+            transforms.ToTensor(),
+            transforms.Normalize([0.485, 0.456, 0.406], 
+                                [0.229, 0.224, 0.225])
+            
+        ])
+
+        test_transforms = transforms.Compose([
+            transforms.Resize(256),
+            transforms.CenterCrop(reseize),
+            transforms.ToTensor(),
+            transforms.Normalize([0.485, 0.456, 0.406], 
+                                [0.229, 0.224, 0.225])
+        ])
+
+        # load the datasets by define the dataloaders
+        train_datasets = datasets.ImageFolder(
+            self.train, transform=train_transforms
+        )
+        valid_datasets = datasets.ImageFolder(
+            self.validate, transform=test_transforms
+        )
+        test_dataset = datasets.ImageFolder(
+            self.test, transform=test_transforms
+        )
+
+        self.train_loader = torch.utils.data.DataLoader(
+            train_datasets, batch_size=64, shuffle=True
+        )
+        self.valid_loader = torch.utils.data.DataLoader(
+            valid_datasets, batch_size=32
+        )
+        self.test_loader = torch.utils.data.DataLoader(
+            test_dataset, batch_size=32
+        )
+
+        # define criterion and optimizer
+        criterion = nn.NLLLoss()
+        optimizer = optim.Adam(self.model.classifier.parameters(), lr=0.001)
+
+        # push the model into gpu
+        self.model.cuda()
+
+        return self.model
