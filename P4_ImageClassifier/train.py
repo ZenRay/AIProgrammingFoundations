@@ -8,6 +8,7 @@
 import argparse
 import warnings
 import os
+import json
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -84,4 +85,16 @@ class TrainModel:
         self.file = file
         self.arch = arch
 
+    def get_spacies(self, file=None):
+        """Parse the flowers spacies
+        Parse the json file store the flower spacies and category
+        """
+        if file is None:
+            current_file = self.file
+        else:
+            current_file = file
         
+        with open(current_file, "r") as data:
+            self.spacies = json.load(data)
+        
+        return self.spacies
