@@ -7,6 +7,7 @@
 
 import argparse
 import warnings
+import os
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -61,3 +62,26 @@ def get_input_args():
     args = parser.parse_args()
 
     return args
+
+class TrainModel:
+    def __init__(self, dir, arch, file):
+        """Init the variable
+
+        Parameters:
+        -----------
+        dir: string
+            Image path
+        arch: string
+            CNN model archtecture
+        file: json file
+            Text file with spacies name
+        """
+        self.dir = dir
+        self.train = os.path.join(dir, "train")
+        self.test = os.path.join(dir, "test")
+        self. validate = os.path.join(dir, "valid")
+        
+        self.file = file
+        self.arch = arch
+
+        
