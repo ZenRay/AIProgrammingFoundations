@@ -96,6 +96,10 @@ class TrainModel:
             arch = input("Invalidate model, choose vgg19_nb, vgg19, resnet50: ")
             self.model = pretrain_model[arch]
 
+        # freeze the model grad
+        for param in self.model.parameters():
+            param.requires_grad = False
+
     def get_spacies(self, file=None):
         """Parse the flowers spacies
         Parse the json file store the flower spacies and category
@@ -158,10 +162,10 @@ class TrainModel:
             for images, labels in iter(loader):
                 if torch.cuda.is_available():
                     inputs = Variable(images.float().cuda(), volatile=True)
-                    inputs = Variable(labels.float().cuda(), volatile=True)
+                    labels = Variable(labels.long().cuda(), volatile=True)
                 else:
                     inputs = Variable(images, volatile=True)
-                    inputs = Variable(labels, volatile=True)
+                    labels = Variable(labels, volatile=True)
 
                 output = self.model.forward(inputs)
                 test_loss += self.criterion(output, labels).data[0]
@@ -202,29 +206,29 @@ class TrainModel:
         ])
 
         # load the datasets by define the dataloaders
-        train_datasets = datasets.ImageFolder(
+        self.train_datasets = datasets.ImageFolder(
             self.train, transform=train_transforms
         )
-        valid_datasets = datasets.ImageFolder(
+        self.valid_datasets = datasets.ImageFolder(
             self.validate, transform=test_transforms
         )
-        test_dataset = datasets.ImageFolder(
+        self.test_dataset = datasets.ImageFolder(
             self.test, transform=test_transforms
         )
 
         self.train_loader = torch.utils.data.DataLoader(
-            train_datasets, batch_size=64, shuffle=True
+            self.train_datasets, batch_size=64, shuffle=True
         )
         self.valid_loader = torch.utils.data.DataLoader(
-            valid_datasets, batch_size=32
+            self.valid_datasets, batch_size=32
         )
         self.test_loader = torch.utils.data.DataLoader(
-            test_dataset, batch_size=32
+            self.test_dataset, batch_size=32
         )
         return self.train_loader, self.valid_loader, self.test_loader
 
     def train_model(
-        self, input_size, out_size, rotation, resize, hidden_layers=None
+        self, input_size, out_size, rotation, resize, hidden_layers=None, epochs=2
     ):
         """Build the classifier
 
@@ -242,18 +246,94 @@ class TrainModel:
             Transforms Random Rotations degree
         resize: int
             The final image size
+        epochs: int
+            The train epoch
+        Returns:
+        ----------
+        model:
+            Nerual Network model
+        criterion:
+            Nerual Network criterion
+        optimizer:
+            Nerual Network optimizer
         """
 
         self.__classifier(input_size, out_size, hidden_layers)
 
         # get the dataset loader
         self.__loader(rotation, resize)
-        
+
         # define criterion and optimizer
         self.criterion = nn.NLLLoss()
         self.optimizer = optim.Adam(self.model.classifier.parameters(), lr=0.001)
 
         # push the model into gpu
         self.model.cuda()
+        self.model.to("cuda")
+        # change the model stage
+        self.model.train()
 
-        return self.model
+        print_steps = int(len(self.train_loader) / 4)
+        train_loss = 0
+        steps = 0
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            # train the network
+            for epoch in range(0, epochs):
+                print("Epoch: {}/{}\n{}".format(epoch+1, epochs, "_"*20))
+                for inputs, labels in iter(self.train_loader):
+                    steps += 1
+                
+                    inputs, labels = inputs.to("cuda"), labels.to("cuda")
+                    self.optimizer.zero_grad()
+
+                    ouputs = self.model.forward(inputs)
+                    loss = self.criterion(ouputs, labels)
+                    loss.backward()
+                    self.optimizer.step()
+
+                    train_loss += loss.item()
+
+                    # display the report
+                    if steps % print_steps == 0:
+                        print(
+                            "\tTrain Loss:\t{:.4f}".format(train_loss / print_steps),
+                            "Validation Loss:\t{:.4f}\tValidation Accuracy:\t{:.4f}".format(
+                                *self.__test_report(self.valid_loader)
+                            )
+                        )
+                        # refix tthe loss value
+                        train_loss = 0
+        return self.model, self.criterion, self.optimizer
+
+    def dump_checkpoint(
+        self, input_size, output_size, hidden_layers=None, 
+        name="vgg19bn_checkpoint.pth"
+    ):
+        """
+        Save the checkpoint
+
+        Parameters:
+        -----------
+        input_size: int
+            Nerual Network input size
+        out_size: int
+            Nerual Network output size
+        hidden_laysers: list default None
+            Nerual Network hidden layers
+        name: string
+            Checkpoint file name
+        """
+        class_to_idx = {
+            val: key for key, val in self.train_datasets.class_to_idx.items()
+        }
+
+        checkpoint = {
+            "input_size": input_size,
+            "output_size": output_size,
+            "class_to_idx": class_to_idx,
+            "state_dict": self.model.state_dict(),
+            "hidden_layers": hidden_layers
+        }
+
+        torch.save(checkpoint, name)
